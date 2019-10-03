@@ -21,7 +21,10 @@ class ContentsModel(BaseModel):
     format: str = None
 
 
-@router.get('/api/contents/{path}')
+@router.get(
+    '/api/contents/{path}', 
+    response_model=ContentsModel
+)
 async def get_model(
     path: str, 
     type: str = None, 
@@ -45,7 +48,10 @@ class RenameModel(BaseModel):
     path: str
 
 
-@router.patch('/api/contents/{path}')
+@router.patch(
+    '/api/contents/{path}',
+    response_model=ContentsModel
+)
 async def rename_file(path: str, model: RenameModel):
     """PATCH renames a file or directory without re-uploading content."""
     cm = router.app.contents_manager
@@ -64,7 +70,11 @@ class CreateModel(BaseModel):
     type: str
 
 
-@router.post('/api/contents/{path}', status_code=201)
+@router.post(
+    '/api/contents/{path}', 
+    status_code=201,
+    response_model=ContentsModel
+)
 async def create_content(path: str, model: CreateModel = None):
     """Create a new file in the specified path.
 
@@ -113,7 +123,10 @@ class SaveModel(BaseModel):
     content: str
 
 
-@router.put('/api/contents/{path}')
+@router.put(
+    '/api/contents/{path}',
+    response_model=ContentsModel
+)
 async def save_content(path: str, model: SaveModel = None):
     cm = router.app.contents_manager
     if model:
