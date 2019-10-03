@@ -4,7 +4,7 @@
 
 Warning! Very experimental!
 
-I've only implemented the `GET` request from the `api/contents` REST API as a proof of concept.  
+Right now, I've only implemented Jupyter's Contents REST API as a proof-of-concept.
 
 ## Install
 
@@ -16,10 +16,9 @@ pip install -e .
 
 ## Test it out!
 
-Run on the command line
+After installing, run the application by calling:
 ```
 jupyter fastapi
 ```
 
-To see the docs, go to `localhost:8888/docs`.
-
+Explore Jupyter's Contents API using Swagger by going to [http://localhost:8888/docs] in your browser.
