@@ -12,7 +12,10 @@ class JupyterFastAPI(ServerApp):
     ]
 
     def init_webapp(self):
-        self.app = FastAPI()
+        self.app = FastAPI(
+            title="Jupyter Server",
+            description="Jupyter Server implementation powered by FastAPI."
+        )
         # Add routes.
         for router in self.routers:
             mod = importlib.import_module('jupyter_fastapi.routers.' + router)
