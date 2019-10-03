@@ -25,7 +25,7 @@ class ContentsModel(BaseModel):
     '/api/contents/{path}', 
     response_model=ContentsModel
 )
-async def get_model(
+async def get_content(
     path: str, 
     type: str = None, 
     format: str = None, 
@@ -52,7 +52,7 @@ class RenameModel(BaseModel):
     '/api/contents/{path}',
     response_model=ContentsModel
 )
-async def rename_file(path: str, model: RenameModel):
+async def rename_content(path: str, model: RenameModel):
     """PATCH renames a file or directory without re-uploading content."""
     cm = router.app.contents_manager
     if model is None:
@@ -147,6 +147,6 @@ async def save_content(path: str, model: SaveModel = None):
 
 
 @router.delete('/api/contents/{path}', status_code=204)
-def delete_file(path: str):
+def delete_content(path: str):
     cm = router.app.contents_manager
     cm.delete(path)
