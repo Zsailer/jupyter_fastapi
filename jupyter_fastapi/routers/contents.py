@@ -3,7 +3,6 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from jupyter_server.utils import maybe_future
-from jupyter_server.services.contents.handlers import validate_model
 
 
 router = APIRouter()
@@ -144,6 +143,7 @@ async def save_content(path: str, model: SaveModel = None):
         model = await maybe_future(cm.new_untitled(
             path=path, type=model.type, ext=model.ext))
     return ContentsModel(**model)
+
 
 
 @router.delete('/api/contents/{path}', status_code=204)

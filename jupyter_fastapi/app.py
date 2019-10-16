@@ -8,7 +8,8 @@ import uvicorn
 class JupyterFastAPI(ServerApp):
 
     routers = [
-        'contents'
+        'contents',
+        'kernels'
     ]
 
     def init_webapp(self):
@@ -22,8 +23,8 @@ class JupyterFastAPI(ServerApp):
             mod.router.app = self
             self.app.include_router(mod.router)
         
-    def initialize(self, argv=None):
-        super(ServerApp, self).initialize(argv)
+    def initialize(self, argv=[]):
+        super(ServerApp, self).initialize(argv=argv)
         self.init_configurables()
         self.init_webapp()
 
