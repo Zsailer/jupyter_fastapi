@@ -5,8 +5,10 @@ from pydantic import BaseModel
 
 from jupyter_server.utils import maybe_future, url_path_join, url_escape
 
-from starlette.websockets import WebSocket
 from starlette.responses import Response
+
+from .zmqstream import ZMQChannels
+from starlette.websockets import WebSocket
 
 router = APIRouter()
 
@@ -104,9 +106,23 @@ async def restart_kernel(kernel_id: str):
         return Kernel(**model)
 
 
-# @router.websocket('/api/kernels/{kernel_id}/channels')
-# async def websocket_endpoint(websocket: Websocket):
-#     await websocket.accept()
-#     while True:
-#         data = await websocket.receive_json()
-#         await websocket.send_json(data)
+
+class ZMQWebsocket(WebSocket, ZMQChannels):
+
+    async def accept(self, kernel_id):
+        await super(ZMQWebsocket, self).accept()
+        self.open(kernel_id)
+
+    async def receive_json(self, msg):
+        data = await super(ZMQWebsocket, self).receive_json(msg)
+        self.on_message(data)
+
+    async def write_message(self, json_msg):
+        await super(ZMQWebsocket, self).send_json(json_msg)
+
+
+@router.websocket('/api/kernels/{kernel_id}/channels')
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_json()
