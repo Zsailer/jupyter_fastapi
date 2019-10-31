@@ -1,23 +1,9 @@
-from datetime import datetime
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
 
 from jupyter_server.utils import maybe_future
-
+from .types import *
 
 router = APIRouter()
-
-
-class ContentsModel(BaseModel):
-    name: str
-    path: str
-    type: str
-    writable: bool
-    created: datetime
-    last_modified: datetime
-    mimetype: str = None
-    content: dict = None
-    format: str = None
 
 
 @router.get(
@@ -43,10 +29,6 @@ async def get_content(
     return ContentsModel(**model)
 
 
-class RenameModel(BaseModel):
-    path: str
-
-
 @router.patch(
     '/api/contents/{path}',
     response_model=ContentsModel
@@ -61,12 +43,6 @@ async def rename_content(path: str, model: RenameModel):
         )
     model = await maybe_future(cm.update(model.dict(), path))
     return ContentsModel(**model)
-
-
-class CreateModel(BaseModel):
-    copy_from: str = None
-    ext: str
-    type: str
 
 
 @router.post(
@@ -112,14 +88,6 @@ async def create_content(path: str, model: CreateModel = None):
                 path=path, type='', ext=''))
 
     return ContentsModel(**model)
-
-
-class SaveModel(BaseModel):
-    name: str
-    path: str
-    type: str
-    format: str
-    content: str
 
 
 @router.put(
